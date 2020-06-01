@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Usage: script/start
+#
+
+set -e
+
+./scripts/build && ./bin/wallet2020

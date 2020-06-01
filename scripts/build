@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Usage: script/build
+
+set -e
+
+export GOPATH="$GOPATH:$GOPATH/vendor:${PWD}"
+
+APPNAME=wallet2020
+
+cd ${PWD} && go build -race -o bin/${APPNAME} cmd/${APPNAME}/main.go

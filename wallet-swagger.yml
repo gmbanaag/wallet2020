@@ -160,9 +160,11 @@ paths:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/TransferResponse'
+            $ref: '#/definitions/TransferResponseSuccess'
         '400':
           description: invalid parameters passed
+          schema:
+            $ref: '#/definitions/TransferResponseFailed'
         '401':
           description : user presented an invalid token
         '500':
@@ -226,7 +228,7 @@ definitions:
           format: float64
         message:
           type: string
-    TransferResponse:
+    TransferResponseSuccess:
       type: object
       properties:
         transaction_id:
@@ -236,6 +238,9 @@ definitions:
         balance:
           type: number
           format: float64
+    TransferResponseFailed:
+      type: object
+      properties:
         error_code:
           type: string
         error_message:

@@ -163,6 +163,8 @@ paths:
             $ref: '#/definitions/TransferResponse'
         '400':
           description: invalid parameters passed
+        '401':
+          description : user presented an invalid token
         '500':
           description: internal server error
       security:

@@ -67,7 +67,7 @@ func warmUpWallet() {
 	err = wallet4.Create()
 	catch(err, false)
 
-	wallet5 := &model.Wallet{}
+	wallet5 = &model.Wallet{}
 	wallet5ID := generateUUID()
 	wallet5.ID = wallet5ID
 	wallet5.Balance = 100
@@ -78,7 +78,7 @@ func warmUpWallet() {
 	err = wallet5.Create()
 	catch(err, false)
 
-	wallet6 := &model.Wallet{}
+	wallet6 = &model.Wallet{}
 	wallet6ID := generateUUID()
 	wallet6.ID = wallet6ID
 	wallet6.Balance = 100
@@ -89,7 +89,7 @@ func warmUpWallet() {
 	err = wallet6.Create()
 	catch(err, false)
 
-	wallet7 := &model.Wallet{}
+	wallet7 = &model.Wallet{}
 	wallet7ID := generateUUID()
 	wallet7.ID = wallet7ID
 	wallet7.Balance = 100
@@ -100,7 +100,7 @@ func warmUpWallet() {
 	err = wallet7.Create()
 	catch(err, false)
 
-	wallet8 := &model.Wallet{}
+	wallet8 = &model.Wallet{}
 	wallet8ID := generateUUID()
 	wallet8.ID = wallet8ID
 	wallet8.Balance = 100

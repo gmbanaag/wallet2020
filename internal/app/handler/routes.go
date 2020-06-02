@@ -1,7 +1,10 @@
 package handler
 
 import (
+	"net/http"
+
 	"github.com/gmbanaag/wallet2020/internal/app/logger"
+	"github.com/gmbanaag/wallet2020/internal/app/metrics"
 
 	"github.com/go-chi/chi"
 )
@@ -28,7 +31,16 @@ func LoadRouters(router *chi.Mux, hd *Handler) *chi.Mux {
 		})
 	})
 
+	m := &metrics.Metrics{}
+	router.Get("/metrics", wrapHandler(m.PrometheusHandler()))
+
 	logger.LogInfo("Loading routes are done")
 
 	return router
+}
+
+func wrapHandler(h http.Handler) http.HandlerFunc {
+	return func(rw http.ResponseWriter, req *http.Request) {
+		h.ServeHTTP(rw, req)
+	}
 }

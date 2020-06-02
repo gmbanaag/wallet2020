@@ -36,14 +36,19 @@ func (Transaction) TableName() string {
 	return "transactions"
 }
 
-//Create wallet
+//Create transaction
 func (t *Transaction) Create() error {
 	return DB.Table(t.TableName()).Create(&t).Error
 }
 
-//Update wallet
+//Update transaction
 func (t *Transaction) Update() error {
 	return DB.Table(t.TableName()).Save(&t).Error
+}
+
+//Delete transaction
+func (t *Transaction) Delete() error {
+	return DB.Table(t.TableName()).Delete(&t).Error
 }
 
 //GetTransactionByID get transaction by id

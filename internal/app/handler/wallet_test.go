@@ -3,7 +3,6 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -30,8 +29,6 @@ func TestWalletGet(t *testing.T) {
 				testrouter.ServeHTTP(recorder, request)
 
 				responseBody := []model.Wallet{}
-
-				log.Println(recorder.Body)
 
 				err = json.NewDecoder(recorder.Body).Decode(&responseBody)
 				catch(err, false)
@@ -75,8 +72,7 @@ func TestWalletGet(t *testing.T) {
 
 				responseBody := []model.Wallet{}
 
-				err = json.NewDecoder(recorder.Body).Decode(&responseBody)
-				catch(err, false)
+				_ = json.NewDecoder(recorder.Body).Decode(&responseBody)
 
 				So(recorder.Code, ShouldEqual, http.StatusUnauthorized)
 			})

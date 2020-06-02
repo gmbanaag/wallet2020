@@ -46,11 +46,10 @@ func (h *Handler) GetReceivedTransactions(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		logger.LogError(fmt.Sprintf("%s [%s]", err.Error(), reqID))
 		w.WriteHeader(http.StatusNotFound)
-		return
+	} else {
+		render.Status(r, http.StatusOK)
+		render.DefaultResponder(w, r, transactions)
 	}
-
-	render.Status(r, http.StatusOK)
-	render.DefaultResponder(w, r, transactions)
 	return
 }
 

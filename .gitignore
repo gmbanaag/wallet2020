@@ -1,2 +1,8 @@
 notes
 c.out
+.DS_Store
+.vscode/
+Makefile
+bin/
+db/
+wallet2020

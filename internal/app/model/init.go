@@ -1,8 +1,11 @@
 package model
 
 import (
+	"fmt"
+	"runtime"
 	"sync"
 
+	"github.com/gmbanaag/wallet2020/internal/app/logger"
 	"github.com/gmbanaag/wallet2020/internal/app/model/cache"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -54,4 +57,18 @@ func SetCacheClient(client *cache.Service) {
 	}
 
 	cacheOnce.Do(setCache)
+}
+
+func catch(err error, fatal bool) {
+	_, fn, line, _ := runtime.Caller(1)
+	message := fmt.Sprintf("%s:%d %v", fn, line, err)
+
+	if fatal == true && err != nil {
+		logger.LogFatal(message)
+		panic(err)
+	}
+
+	if err != nil {
+		logger.LogError(message)
+	}
 }

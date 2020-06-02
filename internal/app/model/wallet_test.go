@@ -1,10 +1,6 @@
 package model
 
 import (
-	"bytes"
-	"encoding/json"
-	"net/http"
-	"net/http/httptest"
 	"testing"
 	"time"
 
@@ -22,7 +18,7 @@ var wallet8 *Wallet
 
 //warmUpWalletcreate multiple wallets
 func warmUpWallet() {
-	wallet1ID := handler.generateUUID()
+	wallet1ID := generateUUID()
 	wallet1 = &Wallet{}
 	wallet1.ID = wallet1ID
 	wallet1.Balance = 100
@@ -33,7 +29,7 @@ func warmUpWallet() {
 	err := wallet1.Create()
 	catch(err, false)
 
-	wallet2ID := handler.generateUUID()
+	wallet2ID := generateUUID()
 	wallet2 = &Wallet{}
 	wallet2.ID = wallet2ID
 	wallet2.Balance = 100
@@ -44,7 +40,7 @@ func warmUpWallet() {
 	err = wallet2.Create()
 	catch(err, false)
 
-	wallet3ID := handler.generateUUID()
+	wallet3ID := generateUUID()
 	wallet3 = &Wallet{}
 	wallet3.ID = wallet3ID
 	wallet3.Balance = 100
@@ -56,7 +52,7 @@ func warmUpWallet() {
 	catch(err, false)
 
 	wallet4 = &Wallet{}
-	wallet4ID := handler.generateUUID()
+	wallet4ID := generateUUID()
 	wallet4.ID = wallet4ID
 	wallet4.Balance = 100
 	wallet4.UserID = wallet4ID
@@ -66,8 +62,8 @@ func warmUpWallet() {
 	err = wallet4.Create()
 	catch(err, false)
 
-	wallet5 := &Wallet{}
-	wallet5ID := handler.generateUUID()
+	wallet5 = &Wallet{}
+	wallet5ID := generateUUID()
 	wallet5.ID = wallet5ID
 	wallet5.Balance = 100
 	wallet5.UserID = wallet5ID
@@ -77,8 +73,8 @@ func warmUpWallet() {
 	err = wallet5.Create()
 	catch(err, false)
 
-	wallet6 := &Wallet{}
-	wallet6ID := handler.generateUUID()
+	wallet6 = &Wallet{}
+	wallet6ID := generateUUID()
 	wallet6.ID = wallet6ID
 	wallet6.Balance = 100
 	wallet6.UserID = wallet6ID
@@ -88,8 +84,8 @@ func warmUpWallet() {
 	err = wallet6.Create()
 	catch(err, false)
 
-	wallet7 := &Wallet{}
-	wallet7ID := handler.generateUUID()
+	wallet7 = &Wallet{}
+	wallet7ID := generateUUID()
 	wallet7.ID = wallet7ID
 	wallet7.Balance = 100
 	wallet7.UserID = wallet7ID
@@ -99,8 +95,8 @@ func warmUpWallet() {
 	err = wallet7.Create()
 	catch(err, false)
 
-	wallet8 := &Wallet{}
-	wallet8ID := handler.generateUUID()
+	wallet8 = &Wallet{}
+	wallet8ID := generateUUID()
 	wallet8.ID = wallet8ID
 	wallet8.Balance = 100
 	wallet8.UserID = wallet8ID
@@ -123,114 +119,22 @@ func tearDownWallet() {
 	wallet8.Delete()
 }
 
-func TestGe(t *testing.T) {
+func TestGetWallet(t *testing.T) {
 	warmUpWallet()
-	Convey("Process POST /v1/transfer request", t, func() {
-		rq := TransferRequest{}
-		rq.SourceWalletID = wallet1.ID
-		rq.DestinationWalletID = wallet2.ID
-		rq.Amount = 20
-		rq.Message = "Thank you"
+	Convey("Test get wallets", t, func() {
+		Convey("Get wallets of walletID", func() {
+			wallet := Wallet{}
+			_ = wallet.GetWalletByID(wallet1.ID)
 
-		req, _ := json.Marshal(rq)
-		Convey("failed transfer", func() {
-			Convey("authorization is missing", func() {
-				request, err := http.NewRequest(http.MethodPost, "/v1/transfer", bytes.NewBuffer(req))
-				request.Header.Add("Content-Type", "application/json")
-
-				if err != nil {
-					t.Fatal(err)
-				}
-
-				recorder := httptest.NewRecorder()
-				testrouter.ServeHTTP(recorder, request)
-				So(recorder.Code, ShouldEqual, http.StatusUnauthorized)
-			})
-
-			Convey("authorization token is invalid", func() {
-				request, err := http.NewRequest(http.MethodPost, "/v1/transfer", bytes.NewBuffer(req))
-				request.Header.Add("Authorization", "Bearer xxx")
-				request.Header.Add("Content-Type", "application/json")
-
-				if err != nil {
-					t.Fatal(err)
-				}
-
-				recorder := httptest.NewRecorder()
-				testrouter.ServeHTTP(recorder, request)
-				So(recorder.Code, ShouldEqual, http.StatusUnauthorized)
-			})
+			So(wallet1.ID, ShouldEqual, wallet1.ID)
 		})
-		Convey("successful transfer", func() {
-			Convey("authorization token is valid", func() {
-				request, err := http.NewRequest(http.MethodPost, "/v1/transfer", bytes.NewBuffer(req))
-				request.Header.Add("Authorization", "Bearer validfortestingpurposes")
-				request.Header.Add("X-User-ID", wallet1.UserID)
-				request.Header.Add("Content-Type", "application/json")
+		Convey("Get wallets of user", func() {
+			wallet := Wallet{}
+			wallets := []Wallet{}
+			wallets, _ = wallet.GetWalletsByUserID(wallet1.UserID)
 
-				if err != nil {
-					t.Fatal(err)
-				}
-
-				recorder := httptest.NewRecorder()
-				testrouter.ServeHTTP(recorder, request)
-
-				responseBody := TransferResponse{}
-
-				err = json.NewDecoder(recorder.Body).Decode(&responseBody)
-				catch(err, false)
-
-				So(responseBody.Balance, ShouldEqual, 80)
-				So(responseBody.TransactionID, ShouldNotBeEmpty)
-				So(responseBody.Result, ShouldEqual, TxnStatusSuccess)
-
-				So(recorder.Code, ShouldEqual, http.StatusOK)
-			})
+			So(len(wallets), ShouldNotBeZeroValue)
 		})
 	})
-}
-
-func TestProcessTransferTransaction(t *testing.T) {
-	Convey("Process transfer", t, func() {
-		Convey("successful transfer", func() {
-			transferRequest = TransferRequest{}
-			transferRequest.SourceWalletID = wallet3.ID
-			transferRequest.DestinationWalletID = wallet4.ID
-			transferRequest.Amount = 20
-			transferRequest.Message = "Thank you"
-
-			_ = prepareWallets()
-			transaction, _ := createTransaction()
-			_ = processTransferTransaction(transaction)
-
-			srcWallet := Wallet{}
-			srcWallet.GetWalletByID(transferRequest.SourceWalletID)
-
-			destWallet := Wallet{}
-			destWallet.GetWalletByID(transferRequest.DestinationWalletID)
-
-			So(transaction.Status, ShouldEqual, TxnStatusSuccess)
-			So(srcWallet.Balance, ShouldEqual, sourceWallet.Balance-transferRequest.Amount)
-			So(destWallet.Balance, ShouldEqual, destinationWallet.Balance+transferRequest.Amount)
-		})
-
-		Convey("failed transfer", func() {
-			Convey("insufficient balance", func() {
-				transferRequest = TransferRequest{}
-				transferRequest.SourceWalletID = wallet3.ID
-				transferRequest.DestinationWalletID = wallet4.ID
-				transferRequest.Amount = 140
-				transferRequest.Message = "Thank you"
-
-				err := prepareWallets()
-
-				So(err, ShouldNotBeNil)
-
-				transaction, _ := createTransaction()
-
-				So(transaction.Status, ShouldEqual, TxnStatusPending)
-			})
-		})
-	})
-	//tearDownWallet()
+	tearDownWallet()
 }

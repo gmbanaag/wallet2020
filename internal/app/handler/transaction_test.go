@@ -15,10 +15,32 @@ func TestTransactionGet(t *testing.T) {
 	warmUpWallet()
 	Convey("Process GET /v1/transactions request", t, func() {
 		Convey("successful request", func() {
+			Convey("successful transfer", func() {
+				transferRequest = TransferRequest{}
+				transferRequest.SourceWalletID = wallet3.ID
+				transferRequest.DestinationWalletID = wallet4.ID
+				transferRequest.Amount = 20
+				transferRequest.Message = "Thank you"
+
+				_ = prepareWallets()
+				transaction, _ := createTransaction()
+				_ = processTransferTransaction(transaction)
+
+				srcWallet := model.Wallet{}
+				srcWallet.GetWalletByID(transferRequest.SourceWalletID)
+
+				destWallet := model.Wallet{}
+				destWallet.GetWalletByID(transferRequest.DestinationWalletID)
+
+				So(transaction.Status, ShouldEqual, model.TxnStatusSuccess)
+				So(srcWallet.Balance, ShouldEqual, sourceWallet.Balance-transferRequest.Amount)
+				So(destWallet.Balance, ShouldEqual, destinationWallet.Balance+transferRequest.Amount)
+			})
+
 			Convey("authorization token is valid sent transactions", func() {
 				request, err := http.NewRequest(http.MethodGet, "/v1/transactions/sent", bytes.NewBuffer([]byte(``)))
 				request.Header.Add("Authorization", "Bearer validfortestingpurposes")
-				request.Header.Add("X-User-ID", wallet1.UserID)
+				request.Header.Add("X-User-ID", wallet3.UserID)
 				request.Header.Add("Content-Type", "application/json")
 
 				if err != nil {
@@ -27,7 +49,6 @@ func TestTransactionGet(t *testing.T) {
 
 				recorder := httptest.NewRecorder()
 				testrouter.ServeHTTP(recorder, request)
-
 				So(recorder.Code, ShouldEqual, http.StatusOK)
 			})
 		})

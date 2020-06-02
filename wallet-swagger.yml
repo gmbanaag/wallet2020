@@ -1,0 +1,336 @@
+swagger: '2.0'
+info:
+  description: 'This is a wallet api service that enables its user to transfer balance to another user.'
+  version: 1.0.0
+  title: Mobile Wallet 2020
+  contact:
+    email: gertrude.mendoza@gmail.com
+host: wallet.api.com
+basePath: /v1
+tags:
+  - name: wallet
+    description: mobile wallet
+  - name: transfer
+    description: transfer balance to another wallet
+  - name: transactions
+    description: transactions user has either sent or received
+  - name: admin
+    description: admin APIs, may only be accessed by tokens that have admin scopes (https://tools.ietf.org/html/rfc7662)
+schemes:
+  - https
+  - http
+paths:
+  /wallets:
+    get:
+      tags:
+        - wallet
+      summary: retrieves all user wallets
+      description: ''
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/WalletsResponse'
+        '401':
+          description : user presented an invalid token
+        '404':  
+          description: user does not have a wallet
+        '500':
+          description: internal server error
+      security:
+        - wallet_auth:
+            - 'default'
+  /wallets/{walletID}:
+    get:
+      tags:
+        - wallet
+      summary: retrieves wallet information
+      parameters:
+        - name: walletID
+          in: path
+          description: ID of user wallet
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: '#/definitions/WalletResponse'
+        '401':
+          description : user presented an invalid token
+        '404':  
+          description: wallet does not exist
+        '500':
+          description: internal server error
+      security:
+        - wallet_auth:
+            - 'default'
+  /transactions/sent:
+    get:
+      tags:
+        - transactions
+      summary: retrieves transaction that the user had sent
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema: 
+            $ref: '#/definitions/TransactionsResponse'
+        '401':
+          description : user presented an invalid token
+        '404':  
+          description: wallet does not exist
+        '500':
+          description: internal server error
+      security:
+        - wallet_auth:
+            - 'default'
+  /transactions/received:
+    get:
+      tags:
+        - transactions
+      summary: retrieves transactions that the user had receieved
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/TransactionsResponse'
+        '401':
+          description : user presented an invalid token
+        '404':  
+          description: wallet does not exist
+        '500':
+          description: internal server error
+      security:
+        - wallet_auth:
+            - 'default'
+  /transactions/{transactionID}:
+    get:
+      tags:
+        - transactions
+      summary: retrieves transaction information
+      description: ''
+      parameters:
+        - name: transactionID
+          in: path
+          description: transaction id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/TransactionResponse'
+        '401':
+          description : user presented an invalid token
+        '404':  
+          description: transaction does not exist
+        '500':
+          description: internal server error
+      security:
+        - wallet_auth:
+            - 'default'
+  /transfer:
+    post:
+      tags:
+        - transfer
+      summary: transfer balance to another wallet
+      description: returns transaction_id, result, balance
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Transfer request
+          required: true
+          schema:
+            $ref: '#/definitions/TransferPayload'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/TransferResponse'
+        '400':
+          description: invalid parameters passed
+        '500':
+          description: internal server error
+      security:
+        - wallet_auth:
+            - 'default'
+  /admin/wallets:
+    get:
+        tags:
+          - admin
+        summary: retrieves all wallet information
+        produces:
+          - application/json
+        responses:
+          '200':
+            description: successful operation
+            schema:
+              $ref: '#/definitions/WalletsResponse'  
+          '401':
+            description : user presented an invalid token
+          '404':  
+            description: no wallet is stored in the server
+          '500':
+            description: internal server error
+        security:
+          - wallet_auth:
+              - 'admin'
+  /admin/transactions:
+    get:
+      tags:
+        - admin
+      summary: retrieves all transactions
+      description: ''
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/TransactionsResponse'
+        '401':
+          description : user presented an invalid token
+        '404':  
+          description: wallet does not exist
+        '500':
+          description: internal server error
+      security:
+        - wallet_auth:
+            - 'admin'
+definitions:
+    TransferPayload:
+      type: object
+      properties:
+        source_wallet_id:
+          type: string
+        destination_wallet_id:
+          type: string
+        amount:
+          type: number
+          format: float64
+        message:
+          type: string
+    TransferResponse:
+      type: object
+      properties:
+        transaction_id:
+          type: string
+        result:
+          type: string
+        balance:
+          type: number
+          format: float64
+        error_code:
+          type: string
+        error_message:
+          type: string
+    WalletResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        country_iso:
+          type: string
+        currency:
+          type: string
+        balance:
+          type: number
+          format: float64
+        create_ts:
+          type: number
+          format: int64
+        update_ts:
+          type: number
+          format: int64    
+    TransactionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        source_user_id:
+          type: string
+        destination_user_id:
+          type: string
+        source_wallet_id:
+          type: string
+        destination_wallet_id:
+          type: string
+        amount:
+          type: number
+          format: float64
+        create_ts:
+          type: number
+          format: int64
+        update_ts:
+          type: number
+          format: int64  
+    WalletsResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          user_id:
+            type: string
+          country_iso:
+            type: string
+          currency:
+            type: string
+          balance:
+            type: number
+            format: float64
+          create_ts:
+            type: number
+            format: int64
+          update_ts:
+            type: number
+            format: int64    
+    TransactionsResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          source_user_id:
+            type: string
+          destination_user_id:
+            type: string
+          source_wallet_id:
+            type: string
+          destination_wallet_id:
+            type: string
+          amount:
+            type: number
+            format: float64
+          create_ts:
+            type: number
+            format: int64
+          update_ts:
+            type: number
+            format: int64            
+securityDefinitions:
+    wallet_auth: 
+      type: oauth2
+      authorizationUrl: 'http://oauth2.wallet.com'
+      flow: implicit
+      scopes:
+        'admin': for admin api
+        'default': for default wallet clients

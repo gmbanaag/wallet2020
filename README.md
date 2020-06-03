@@ -171,7 +171,7 @@ curl --location --request GET 'localhost:3000/v1/transactions/received' \
 }'
 ```
 
-    I had added a metrics services for later instrumentation requirements"
+    I had added a metrics services for later instrumentation requirements
 
 
 ```sh
@@ -183,6 +183,7 @@ curl --location --request GET 'localhost:3000/metrics' \
 "amount": 10,
 "message":"here ya go"
 }'
+```
 
 ## TODO
 

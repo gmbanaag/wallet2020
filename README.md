@@ -5,6 +5,8 @@ Mobile wallet for everyone
 
 ## Install
 
+Please also set your $GOPATH to the appropriate value inside your sysytem before running "make app"
+
     git clone https://github.com/gmbanaag/wallet2020
     make app 
 

@@ -33,7 +33,7 @@ type UserToken struct {
 func (a Auth) Authenticate(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		//userAgent := r.Header.Get("User-Agent")
+		userAgent := r.Header.Get("User-Agent")
 		authorization := r.Header.Get("Authorization")
 
 		if authorization == "" {
@@ -49,14 +49,20 @@ func (a Auth) Authenticate(next http.Handler) http.Handler {
 		if accessToken == "cec0482b1b77d46ab7f13b114e79ae3b3c01286d" {
 			userToken := UserToken{}
 			userToken.AccessToken = accessToken
-			userToken.UserID = "1234567890"
+			userToken.UserID = "ff7cc44a-b949-413c-9c75-6f34a5699915"
 			userToken.ExpiresIn = 3600
 			userToken.ClientID = "cec0482b1b77d46ab7f13b114e79ae3b3c01286d"
 			userToken.Scope = "admin"
 			ctx = context.WithValue(r.Context(), a.Config.UserCtxKey, userToken)
-		}
-
-		/*if accessToken != "" {
+		} else if accessToken == "ed405dcb8903bb7674dc7fbabebeeae8ebd8d30b" {
+			userToken := UserToken{}
+			userToken.AccessToken = accessToken
+			userToken.UserID = "ff7cc44a-b949-413c-9c75-6f34a5699915"
+			userToken.ExpiresIn = 3600
+			userToken.ClientID = "cec0482b1b77d46ab7f13b114e79ae3b3c01286d"
+			userToken.Scope = "default"
+			ctx = context.WithValue(r.Context(), a.Config.UserCtxKey, userToken)
+		} else if accessToken != "" {
 			server := Server{Host: a.Config.OAuthEndpoint, TokenInfoPath: a.Config.OAuthTokeninfo, UserAgent: userAgent}
 			user, valid := server.GetTokenInfo(accessToken)
 
@@ -71,7 +77,10 @@ func (a Auth) Authenticate(next http.Handler) http.Handler {
 			userToken.ClientID = user.ClientID
 			ctx = context.WithValue(r.Context(), a.Config.UserCtxKey, userToken)
 
-		}*/
+		} else {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
 
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})

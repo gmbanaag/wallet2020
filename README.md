@@ -50,8 +50,8 @@ The current validation consumes the following response payload:
 
 To test even without connecting to a valid authentication service you may use the following tokens, I had hardcoded.
 
-admin user: cec0482b1b77d46ab7f13b114e79ae3b3c01286d
-default user: ed405dcb8903bb7674dc7fbabebeeae8ebd8d30b
+    admin user: cec0482b1b77d46ab7f13b114e79ae3b3c01286d
+    default user: ed405dcb8903bb7674dc7fbabebeeae8ebd8d30b
 
 I had added sample requests below.
 

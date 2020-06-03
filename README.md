@@ -5,7 +5,7 @@ Mobile wallet for everyone
 
 ## Install
 
-Please also set your $GOPATH to the appropriate value inside your sysytem before running "make app"
+Please also set your $GOPATH to the appropriate value inside your sysytem before running "make app".  The service has an automigrate for the tables but not for database creation. Please also create the database in your server. It uses mysql as default but you may also use other relational database supported by Gorm (https://gorm.io/docs/connecting_to_the_database.html)
 
     git clone https://github.com/gmbanaag/wallet2020
     make app 
@@ -13,7 +13,7 @@ Please also set your $GOPATH to the appropriate value inside your sysytem before
 
 ## Run
 
-Before you run make sure you had updated the configuration at .env
+Before you run make sure you had updated the configuration at .env. 
 
 You may run the binary via:
     ./wallet2020

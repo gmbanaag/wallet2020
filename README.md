@@ -79,12 +79,7 @@ Get all current user's wallet:
 ```sh
 curl --location --request GET 'localhost:3000/v1/wallets' \
 --header 'Authorization: Bearer ed405dcb8903bb7674dc7fbabebeeae8ebd8d30b' \
---header 'Content-Type: application/json' \
---data-raw '{"source_wallet_id":"ff7cc44a-b949-413c-9c75-6f34a5699915",
-"destination_wallet_id":"fa63af6e-3442-4f5f-9fb3-b6a33e3b9c9d",
-"amount": 10,
-"message":"here ya go"
-}'
+--header 'Content-Type: application/json' 
 ```
 
    
@@ -93,12 +88,7 @@ Get a specific wallet:
 ```sh
 curl --location --request GET 'localhost:3000/v1/wallets/ff7cc44a-b949-413c-9c75-6f34a5699915' \
 --header 'Authorization: Bearer ed405dcb8903bb7674dc7fbabebeeae8ebd8d30b' \
---header 'Content-Type: application/json' \
---data-raw '{"source_wallet_id":"ff7cc44a-b949-413c-9c75-6f34a5699915",
-"destination_wallet_id":"fa63af6e-3442-4f5f-9fb3-b6a33e3b9c9d",
-"amount": 10,
-"message":"here ya go"
-}'
+--header 'Content-Type: application/json'
 ```
 
 
@@ -107,12 +97,7 @@ Admin can get all available wallets:
 ```sh
 curl --location --request GET 'localhost:3000/v1/admin/wallets' \
 --header 'Authorization: Bearer cec0482b1b77d46ab7f13b114e79ae3b3c01286d' \
---header 'Content-Type: application/json' \
---data-raw '{"source_wallet_id":"ff7cc44a-b949-413c-9c75-6f34a5699915",
-"destination_wallet_id":"fa63af6e-3442-4f5f-9fb3-b6a33e3b9c9d",
-"amount": 10,
-"message":"here ya go"
-}'
+--header 'Content-Type: application/json'
 ```
     
    
@@ -121,12 +106,7 @@ Admin can get all transactions:
 ```sh
 curl --location --request GET 'localhost:3000/v1/admin/transactions' \
 --header 'Authorization: Bearer cec0482b1b77d46ab7f13b114e79ae3b3c01286d' \
---header 'Content-Type: application/json' \
---data-raw '{"source_wallet_id":"ff7cc44a-b949-413c-9c75-6f34a5699915",
-"destination_wallet_id":"fa63af6e-3442-4f5f-9fb3-b6a33e3b9c9d",
-"amount": 10,
-"message":"here ya go"
-}'
+--header 'Content-Type: application/json' 
 ```
 
   
@@ -135,12 +115,7 @@ curl --location --request GET 'localhost:3000/v1/admin/transactions' \
 ```sh
 curl --location --request GET 'localhost:3000/v1/admin/transactions' \
 --header 'Authorization: Bearer ed405dcb8903bb7674dc7fbabebeeae8ebd8d30b' \
---header 'Content-Type: application/json' \
---data-raw '{"source_wallet_id":"ff7cc44a-b949-413c-9c75-6f34a5699915",
-"destination_wallet_id":"fa63af6e-3442-4f5f-9fb3-b6a33e3b9c9d",
-"amount": 10,
-"message":"here ya go"
-}'
+--header 'Content-Type: application/json'
 ``` 
 
    
@@ -148,12 +123,7 @@ Getting current user's sent transfers:
 ```sh
 curl --location --request GET 'localhost:3000/v1/transactions/sent' \
 --header 'Authorization: Bearer ed405dcb8903bb7674dc7fbabebeeae8ebd8d30b' \
---header 'Content-Type: application/json' \
---data-raw '{"source_wallet_id":"ff7cc44a-b949-413c-9c75-6f34a5699915",
-"destination_wallet_id":"fa63af6e-3442-4f5f-9fb3-b6a33e3b9c9d",
-"amount": 10,
-"message":"here ya go"
-}'
+--header 'Content-Type: application/json'
 ```
 
   
@@ -161,12 +131,7 @@ Getting transfer received (This would result to HTTP 404 because user didnt rece
 ```sh
 curl --location --request GET 'localhost:3000/v1/transactions/received' \
 --header 'Authorization: Bearer ed405dcb8903bb7674dc7fbabebeeae8ebd8d30b' \
---header 'Content-Type: application/json' \
---data-raw '{"source_wallet_id":"ff7cc44a-b949-413c-9c75-6f34a5699915",
-"destination_wallet_id":"fa63af6e-3442-4f5f-9fb3-b6a33e3b9c9d",
-"amount": 10,
-"message":"here ya go"
-}'
+--header 'Content-Type: application/json' 
 ```
 
 
@@ -175,12 +140,7 @@ I had added a metrics services for later instrumentation requirements
 ```sh
 curl --location --request GET 'localhost:3000/metrics' \
 --header 'Authorization: Bearer ed405dcb8903bb7674dc7fbabebeeae8ebd8d30b' \
---header 'Content-Type: application/json' \
---data-raw '{"source_wallet_id":"ff7cc44a-b949-413c-9c75-6f34a5699915",
-"destination_wallet_id":"fa63af6e-3442-4f5f-9fb3-b6a33e3b9c9d",
-"amount": 10,
-"message":"here ya go"
-}'
+--header 'Content-Type: application/json'
 ```
 
 ## TODO
